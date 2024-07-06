@@ -14,5 +14,6 @@ Route::get('/', function () {
     ], 403);
 })->name('login');
 
+Route::post('/v1/auth/register', [UserController::class, 'register']);
 Route::post('/v1/auth/login', [UserController::class, 'login']);
 Route::post('/v1/auth/logout', [UserController::class, 'logout'])->middleware('auth:sanctum');
