@@ -21,6 +21,7 @@ class FormController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
+            "slug" => 'required|alpha_dash',
             'description' => 'nullable|string',
             'limit_one_response' => 'boolean',
             'allowed_domains' => 'nullable|array'
@@ -28,7 +29,7 @@ class FormController extends Controller
 
         $form = auth()->user()->forms()->create([
             'name' => $validated['name'],
-            'slug' => Str::slug($validated['name']),
+            'slug' => Str::slug($validated['slug']),
             'description' => $validated['description'] ?? null,
             'limit_one_response' => $validated['limit_one_response'] ?? false,
             'allowed_domains' => $validated['allowed_domains'] ?? null,

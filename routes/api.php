@@ -9,7 +9,6 @@ use Illuminate\Support\Facades\Route;
 Route::prefix('v1')->group(function () {
     // Authentication routes
     Route::post('/register', [UserController::class, 'register']);
-
     Route::prefix('auth')->group(function () {
         Route::post('/login', [UserController::class, 'login']);
         Route::post('/logout', [UserController::class, 'logout'])->middleware('auth:sanctum');
