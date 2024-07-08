@@ -6,13 +6,14 @@ use App\Models\Form;
 use App\Models\Question;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Log;
 
 class QuestionController extends Controller
 {
     public function store(Request $request, Form $form)
     {
         // Check if the user owns the form
-        if ($form->user_id !== auth()->id()) {
+        if ($form->creator_id !== auth()->id()) {
             return response()->json(['message' => 'Forbidden access'], 403);
         }
 
@@ -30,9 +31,13 @@ class QuestionController extends Controller
             ], 422);
         }
 
-        $question = new Question($request->all());
+        $question = new Question();
         $question->form_id = $form->id;
-        
+        $question->choices = $request->input('choices');
+        $question->name = $request->input('name');
+        $question->choice_type = $request->input('choice_type', 'default_value'); // Sertakan nilai choice_type
+        $question->is_required = $request->input('is_required', false); // Sertakan nilai default untuk is_required
+
         if (in_array($request->choice_type, ['multiple choice', 'dropdown', 'checkboxes'])) {
             $question->choices = implode(',', $request->choices);
         }
@@ -48,7 +53,7 @@ class QuestionController extends Controller
     public function destroy(Form $form, Question $question)
     {
         // Check if the user owns the form
-        if ($form->user_id !== auth()->id()) {
+        if ($form->creator_id !== auth()->id()) {
             return response()->json(['message' => 'Forbidden access'], 403);
         }
 

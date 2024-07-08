@@ -9,7 +9,11 @@ class Response extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'choice_type', 'choices', 'is_required'];
+    protected $fillable = ['form_id', 'user_id', 'created_at', 'updated_at'];
+
+    protected $attributes = [
+        'user_id' => 0, // Default value
+    ];
 
     // App\Models\Form
     public function responses()

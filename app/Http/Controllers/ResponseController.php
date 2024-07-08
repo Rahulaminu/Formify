@@ -28,9 +28,12 @@ class ResponseController extends Controller
             'answers.*.value' => 'required',
         ]);
 
-        // Create the response
+        // Create the response with valid user_id
         $response = $form->responses()->create([
-            'user_id' => Auth::id(),
+            'form_id' => $request->input('form_id'),
+            'user_id' => $request->input('user_id', Auth::id()), // Use Auth::id() if user_id is not provided
+            'created_at' => now(),
+            'updated_at' => now(),
         ]);
 
         // Save the answers
@@ -51,15 +54,16 @@ class ResponseController extends Controller
         }
 
         $userDomain = substr(strrchr($email, "@"), 1);
-        $allowedDomains = explode(',', $form->allowed_domains);
+        $allowedDomains = is_array($form->allowed_domains) ? implode(',', $form->allowed_domains) : $form->allowed_domains;
+        $allowedDomainsArray = explode(',', $allowedDomains);
 
-        return in_array($userDomain, $allowedDomains);
+        return in_array($userDomain, $allowedDomainsArray);
     }
 
     public function index(Form $form)
     {
         // Check if the user is the creator of the form
-        if ($form->user_id !== Auth::id()) {
+        if ($form->creator_id !== Auth::id()) {
             return response()->json(['message' => 'Forbidden access'], 403);
         }
 
@@ -82,4 +86,3 @@ class ResponseController extends Controller
     }
 
 }
-

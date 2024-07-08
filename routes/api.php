@@ -20,11 +20,11 @@ Route::prefix('v1')->group(function () {
         Route::post('/forms', [FormController::class, 'store']);
         Route::get('/forms/{slug}', [FormController::class, 'show']);
 
-        Route::post('/forms/{form}/responses', [ResponseController::class, 'store']);
-        Route::get('/forms/{form}/responses', [ResponseController::class, 'index']);
-
         Route::post('/forms/{form:slug}/questions', [QuestionController::class, 'store']);
         Route::delete('/forms/{form:slug}/questions/{question}', [QuestionController::class, 'destroy']);
+
+        Route::post('/forms/{form}/responses', [ResponseController::class, 'store']);
+        Route::get('/forms/{form:slug}/responses', [ResponseController::class, 'index']);
     });
 
     Route::get('/', function () {

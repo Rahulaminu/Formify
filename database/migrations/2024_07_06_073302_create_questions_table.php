@@ -12,7 +12,7 @@ class CreateQuestionsTable extends Migration
             $table->id();
             $table->foreignId('form_id')->constrained()->onDelete('cascade');
             $table->string('name');
-            $table->string('choice_type');
+            $table->string('choice_type')->default('default_value'); // Added default value
             $table->text('choices')->nullable();
             $table->boolean('is_required')->default(false);
             $table->timestamps();
